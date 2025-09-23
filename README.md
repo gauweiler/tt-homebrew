@@ -16,12 +16,12 @@ With `node build.js -i gme/Wimmelbuch.gme -o "/run/media/$(whoami)/tiptoi/Wimmel
 ## roadmap
 If you want to contribute or just stay up to date, join the [tt-homebrew discord](https://discord.gg/bsRAuBnX3j)
 - [x] Support for 2N and 3L
+- [x] Microphone / CREATE support 
 - [ ] Create a main template, that makes scripts work
 - [ ] Create files without tttool (coming soon, checkout gmelib)
 - [ ] list files and directorys
-- [ ] Microphone support for Pens (in work)
 - [ ] Uart
-- [ ] Wifi support (i dont have a pen with wifi)
+- [ ] Wifi support 
 - [ ] add firmware offsets with functions that arent accessible via the sys_api
 
 
@@ -36,10 +36,15 @@ If you want to contribute or just stay up to date, join the [tt-homebrew discord
 | Bios.bin      | tbd           | 0x0800 0000   | 0x0080 0000   |
 | Prog.bin      | tbd           | 0x0800 9000   | 0x0082 9000
 | Prog.bin entry| tbd           | 0x0800 9100   | 0x0085 ed01 the 1 at the end means thumb mode / only for 4E / differs on 5E and 6E
-| GME bins      | tbd           | 0x0813 2000   | 0x0093 0000?
+| GME bins      | tbd           | 0x0813 2000   | 0x0093 0000
 | GME Gamestate | tbd           | 0x0814 1000   | 0x0094 0000
+| alloc stuff   | tbd           | 0x?           | 0x0095 0000
 | Return Game   | tbd           |               | 0x0082 c3c5? looks wrong
 | Return Main   | tbd           | 
+
+sysparam at 0x00805E50
+fpAkOidPara at 0x00950780
+filehandle 0x00958640
 
 > i dont have a pen with first gen processor, feel free to test it on your pen
 
@@ -59,3 +64,6 @@ Want to decompile binaries from gme files? This is my routine:
 - then run the auto-analysis 
 - If you have done everything right, you should now have a project with api names, correct offsets and no red addresses
 
+## Note
+Binarys can only be 65kb (0xffff) of size on 3L and 61kb (0xf000) on 2N
+todo: check if it could be larger since the gmefile has 32bit size

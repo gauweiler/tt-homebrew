@@ -3,5 +3,8 @@ node_modules
 *.gme
 *.out
 *.bin
+*.yaml
+*.ods
+*_Game*
 gme/*
 dumps/*

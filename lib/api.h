@@ -17,7 +17,7 @@ typedef struct {                                                                
     char *(*returns_if_p_audPlayer_is_null)();                                                                 // 12
     unsigned char *(fpAkOidPara);                                                                              // 13
     int(*p_filehandle_current_gme);                                                                            // 14
-    int(*tbd15);
+    unsigned short *(gme_registers);
     int(*tbd16);
     void (*IMP_acces_from_gme_gametable_offset_maybe_init)();
     int(*tbd18);
@@ -75,7 +75,7 @@ typedef struct {                                                                
     int(*tbd70);
     int(*tbd71);
     int(*tbd72);
-    unsigned short *(gme_registers);
+    unsigned short *(also_gme_registers);
     int(*tbd74);
     int(*tbd75);
     int(*tbd76);

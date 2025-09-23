@@ -1,6 +1,8 @@
 #include "api.h"
 #include "sdk.c"
 
+// NOTE: getOid() currently only works if the binary is loaded as a game and the touched oid is in the book, not as a main binary
+
 void main(system_api *apiPara) {
     initTT(apiPara);
     if (api->fpAkOidPara[First_time_exec] == 0) {

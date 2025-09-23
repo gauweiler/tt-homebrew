@@ -22,9 +22,12 @@ void main(system_api *apiOrgi) {
         file = api->open(L"B:/dump/0x82_9000_3L", 1, 1);
         api->play_chomp_voice(4);
         fileOpen = 1;
-        int file = api->open(L"B:/dump/sysapi3L", 1, 1);
-        api->write(file, apiOrgi, 0x2ff);
-        api->close(file);
+        int sysapifile = api->open(L"B:/dump/sysapi3L", 1, 1);
+        api->write(sysapifile, apiOrgi, 0x2ff);
+        api->close(sysapifile);
+        int oidfile = api->open(L"B:/dump/oid3L", 1, 1);
+        api->write(oidfile, apiOrgi, 0x2ff);
+        api->close(oidfile);
 #endif
     }
 

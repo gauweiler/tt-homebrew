@@ -81,13 +81,13 @@ if (argv.p) {
     }
 } else {
     // modify the file with gmelib
-    console.log(`replacing ${gmefile.main2NbinaryTable[0].filename} with gmelib`)
     if (argv.b.toString().toLowerCase() == "m") {
+        console.log(`replacing ${gmefile.main2NbinaryTable[0].filename} (main) with gmelib`)
         gmefile.replaceBinary(readFileSync(`packages/${argv.n}/build/2N.bin`), gmefile.main2NbinaryTable, gmefile.main2NbinaryTableOffset, 0)
         gmefile.replaceBinary(readFileSync(`packages/${argv.n}/build/3L.bin`), gmefile.main3LbinaryTable, gmefile.main3LbinaryTableOffset, 0)
         writeFileSync(argv.o, gmefile.gmeFileBuffer)
     } else {
-        console.log(`replacing ${gmefile.game2NbinariesTable[argv.b].filename} with gmelib`)
+        console.log(`replacing ${gmefile.game2NbinariesTable[argv.b].filename} (game) with gmelib`)
         gmefile.replaceBinary(readFileSync(`packages/${argv.n}/build/2N.bin`), gmefile.game2NbinariesTable, gmefile.game2NbinariesTableOffset, argv.b)
         gmefile.replaceBinary(readFileSync(`packages/${argv.n}/build/3L.bin`), gmefile.game3LbinariesTable, gmefile.game3LbinariesTableOffset, argv.b)
         writeFileSync(argv.o, gmefile.gmeFileBuffer)
