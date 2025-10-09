@@ -3,10 +3,10 @@
 
 typedef struct {                                                                                               // this seems to be the same on 2N and 3L, but fpAkOidPara differs
     void (*tbd0)();                                                                                            // 0
-    void (*tbd1)();                                                                                            // 1
+    void (*tbd1)();                                                                                            // 1 both (0 & 1) end up in the same code
     void (*printf)(unsigned char *);                                                                           // 2
     int (*is_audio_playing)();                                                                                 // 3
-    void (*tbd4)();                                                                                            // 4
+    void (*tbd4)();                                                                                            // 4 sets some function pointers
     int (*open)(unsigned short *, unsigned int, unsigned int);                                                 // 5
     int (*read)(int filehandle, void *buff, unsigned int size);                                                // 6 
     int (*write)(int filehandle, void *buff, unsigned int size);                                               // 7
@@ -22,14 +22,14 @@ typedef struct {                                                                
     void (*IMP_acces_from_gme_gametable_offset_maybe_init)();
     int(*tbd18);
     void (*tbd19)();
-    int(*tbd20);
-    int(*tbd21);
-    int(*tbd22);
-    int(*tbd23);
-    int(*tbd24);
-    int(*tbd25);
-    int(*tbd26);
-    void (*imp_maybe_xor)();
+    int(*tbd20);    // = 0
+    int(*tbd21);    // = 0x3004
+    int(*tbd22);    // = 0xac19
+    int(*tbd23);    // = 0 (1byte)
+    int(*tbd24);    // = 1 (next byte)
+    int(*tbd25);    // = 1 (next byte)
+    int(*tbd26);    // = 1 (next byte)
+    void (*imp_maybe_xor)(); // no code
     void (*parse_new_gme_header)();
     void (*inits_resets_the_gme_registers_to_default)();
     void (*parses_start_and_end_oid)();
@@ -46,10 +46,10 @@ typedef struct {                                                                
     void (*parses_aditional_script_table)();
     void (*checks_product_id_and_ravensburg_id)();
     void (*something_mod)();
-    int(*tbd44);
+    int(*tbd44); // filehandle
     int(*tbd45);
     int(*tbd46);
-    int(*tbd47);
+    int(*tbd47); // condition number
     int(*tbd48);
     int(*gme_register_count);
     int(*tbd50);
@@ -70,18 +70,18 @@ typedef struct {                                                                
     int(*tbd65);
     int(*tbd66);
     int(*tbd67);
-    int(*tbd68);
+    int(*tbd68); // product id
     int(*tbd69);
     int(*tbd70);
     int(*tbd71);
     int(*tbd72);
     unsigned short *(also_gme_registers);
-    int(*tbd74);
+    int(*tbd74);    // = 0x238b
     int(*tbd75);
     int(*tbd76);
     int(*tbd77);
     int(*tbd78);
-    int(*tbd79);
+    int(*tbd79); // vllt last played sound id
     int(*tbd80);
     int(*tbd81);
     int(*tbd82);
@@ -104,7 +104,7 @@ typedef struct {                                                                
     void (*play_chomp_voice)();
     void (*get_random_number_or_counter)();
     void (*maybe_mkFile_maybe_delete)();
-    void (*tbd102)();
+    void (*tbd102)(); // somthing in bios
     void (*tbd103)(); // functions from here on (including this) is only avalibel on create pens 
     void (*returns_booc_rec_str)();
     void (*tbd105)();
@@ -145,6 +145,12 @@ typedef struct {                                                                
     void (*tbd140)();
 } system_api;
 
+// typedef struct {
+//     int ig_flag;
+//     int func_pointer;
+//     int pos;
+// } file;
+
 // #define build_for_2N
 #ifdef build_for_2N
 // #pragma message("Compiling for 2N")
@@ -157,6 +163,7 @@ typedef struct {                                                                
 #define next_game 0x131
 #define start_next_game 0x12f
 
+#define BINARY_OFFSET 0x08132000
 #define SAVEDATA 0x08141000
 #define START_PROG_BIN 0x08009000
 #else
@@ -170,8 +177,9 @@ typedef struct {                                                                
 #define next_game 0x69d
 #define start_next_game 0x69b
 
+#define BINARY_OFFSET 0x00930000
 #define SAVEDATA 0x00940000
 #define START_PROG_BIN 0x00829000
 #endif
 
-#endif// this is just a experiment and currently DOESNT WORK
+#endif

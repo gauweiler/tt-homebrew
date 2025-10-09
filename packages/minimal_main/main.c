@@ -8,6 +8,9 @@
 
 // CURRENTLY THIS CODE DOESN'T WORK!
 
+// fpAkOidPara + 0x18 first used oid
+// fpAkOidPara + 0x1a last used oid
+
 void main(system_api *apiPara) {
     initTT(apiPara);
     if (api->fpAkOidPara[First_time_exec] == 0) {

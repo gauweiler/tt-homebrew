@@ -17,6 +17,7 @@ With `node build.js -i gme/Wimmelbuch.gme -o "/run/media/$(whoami)/tiptoi/Wimmel
 If you want to contribute or just stay up to date, join the [tt-homebrew discord](https://discord.gg/bsRAuBnX3j)
 - [x] Support for 2N and 3L
 - [x] Microphone / CREATE support 
+- [ ] Automatic injection in binaries
 - [ ] Create a main template, that makes scripts work
 - [ ] Create files without tttool (coming soon, checkout gmelib)
 - [ ] list files and directorys

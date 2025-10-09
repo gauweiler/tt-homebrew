@@ -6,5 +6,8 @@ node_modules
 *.yaml
 *.ods
 *_Game*
+*_Main320*
 gme/*
 dumps/*
+lib/3L_hook.ld
+lib/2N_hook.ld
