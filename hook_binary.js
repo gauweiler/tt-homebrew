@@ -8,7 +8,8 @@ const argv = minimist(process.argv.splice(2))
 const printHelp = () => {
     console.log(`-i inputfile
         -b game number or m for main
-        -n name of the hook`)
+        -n name of the hook
+        -s start oid`)
     process.exit(1)
 }
 
@@ -69,5 +70,9 @@ const new_bin = hookBinary(binary, readFileSync(`hooks/${argv.n}/build/3L.bin`))
 // (inject.js) binary wird per changeBinary() reingepackt, da größere größe IMP:
 gmefile.replaceBinary(new_bin, gmefile.game3LbinariesTable, gmefile.game3LbinariesTableOffset, argv.b)
 
-writeFileSync(argv.o ?? `hooked_${argv.i}`, gmefile.gmeFileBuffer)
+if (argv.s) {
+    gmefile.changeProductId(s)
+}
+
+writeFileSync(argv.o ?? `hooked_${gmefile.productId}_${argv.i}`, gmefile.gmeFileBuffer)
 // todo: size check
