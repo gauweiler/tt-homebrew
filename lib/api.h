@@ -2,8 +2,8 @@
 #define __API_H__
 
 typedef struct {                                                                                               // this seems to be the same on 2N and 3L, but fpAkOidPara differs
-    void (*tbd0)();                                                                                            // 0
-    void (*tbd1)();                                                                                            // 1 both (0 & 1) end up in the same code
+    void *(*malloc)();                                                                                            // 0
+    void (*free)();                                                                                            // 1 both (0 & 1) end up in the same code
     void (*printf)(unsigned char *);                                                                           // 2
     int (*is_audio_playing)();                                                                                 // 3
     void (*tbd4)();                                                                                            // 4 sets some function pointers
@@ -13,7 +13,7 @@ typedef struct {                                                                
     int (*close)(int filehandle);                                                                              // 8
     int (*seek)(int, unsigned int, int allways_is_zero);                                                       // 9
     void (*tbd10)();                                                                                           // 10
-    int (*last_thing_that_gets_called_to_play_sound)(int filehandle, unsigned int offset, unsigned int size);  // 11
+    int (*play_sound)(int filehandle, unsigned int offset, unsigned int size);  // 11
     char *(*returns_if_p_audPlayer_is_null)();                                                                 // 12
     unsigned char *(fpAkOidPara);                                                                              // 13
     int(*p_filehandle_current_gme);                                                                            // 14
@@ -104,7 +104,7 @@ typedef struct {                                                                
     void (*play_chomp_voice)();
     void (*get_random_number_or_counter)();
     void (*maybe_mkFile_maybe_delete)();
-    void (*tbd102)(); // somthing in bios
+    void (*get_random)(); // somthing in bios
     void (*tbd103)(); // functions from here on (including this) is only avalibel on create pens 
     void (*returns_booc_rec_str)();
     void (*tbd105)();

@@ -35,6 +35,9 @@ void main(system_api *apiOrgi) {
         api->write(file, apiOrgi, 0x1ff);
         api->close(file);
         // todo: add more offsets for diffrent pens
+        int cfwfile = api->open(L"B:/dump/cfw", 1, 1);
+        api->write(cfwfile, (void *)0x08000020, 8);
+        api->close(cfwfile);
 #else
         file = api->open(L"B:/dump/0x82_9000_3L", 1, 1);
         api->play_chomp_voice(4);

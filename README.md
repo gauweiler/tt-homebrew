@@ -17,11 +17,11 @@ With `node build.js -i gme/Wimmelbuch.gme -o "/run/media/$(whoami)/tiptoi/Wimmel
 If you want to contribute or just stay up to date, join the [tt-homebrew discord](https://discord.gg/bsRAuBnX3j)
 - [x] Support for 2N and 3L
 - [x] Microphone / CREATE support 
-- [ ] Automatic injection in binaries
+- [x] Automatic injection in binaries
 - [ ] Create a main template, that makes scripts work
 - [ ] Create files without tttool (coming soon, checkout gmelib)
 - [ ] list files and directorys
-- [ ] Uart
+- [x] Uart
 - [ ] Wifi support 
 - [ ] add firmware offsets with functions that arent accessible via the sys_api
 
@@ -42,6 +42,8 @@ If you want to contribute or just stay up to date, join the [tt-homebrew discord
 | alloc stuff   | tbd           | 0x?           | 0x0095 0000
 | Return Game   | tbd           |               | 0x0082 c3c5? looks wrong
 | Return Main   | tbd           | 
+| malloc        | tbd           | 0x08142000
+| malloc len    | tbd           | 0x00098000
 
 sysparam at 0x00805E50
 fpAkOidPara at 0x00950780

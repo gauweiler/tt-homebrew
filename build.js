@@ -13,6 +13,7 @@ const printHelp = () => {
         -l      list games inside the input .gme file
         -p      patch the output file insadt of writing it new, its faster, especially if you output on the pen direct | note: only works if you have dd installed
         -d      output dd commands, that you can use instad of this script
+        -s      new start oid
         -b      which binary inside the .gme file should be overwritten
                 write a number to overwrite the corrosponding game or write M to overwrite the main binary `)
     process.exit(1)
@@ -63,6 +64,10 @@ if (!existsSync(`binaries/${argv.n}`)) {
 
 console.log(child.execSync("make", { cwd: `binaries/${argv.n}` }).toString())
 
+if (argv.s) {
+    gmefile.changeProductId(argv.s)
+}
+
 if (argv.p) {
     if (!existsSync(argv.o)) {
         console.error(`Error: Output file "${argv.o}" does not exist. Cannot patch with dd.`)
@@ -75,6 +80,10 @@ if (argv.p) {
         child.execSync(`dd "if=binaries/${argv.n}/build/2N.bin" "of=${argv.o}" bs=1 seek=${gmefile.main2NbinaryTable[0].offset} count=${gmefile.main2NbinaryTable[0].size} conv=notrunc`)
         child.execSync(`dd "if=binaries/${argv.n}/build/3L.bin" "of=${argv.o}" bs=1 seek=${gmefile.main3LbinaryTable[0].offset} count=${gmefile.main3LbinaryTable[0].size} conv=notrunc`)
     } else {
+        if (gmefile.game2NbinariesTable[argv.b].size < readFileSync(`binaries/${argv.n}/build/2N.bin`).length){
+            console.error("new file is to large to patch with dd")
+        }
+        console.log(`old: ${gmefile.game2NbinariesTable[argv.b].size} new: ${readFileSync(`binaries/${argv.n}/build/2N.bin`).length}`)
         console.log(`replacing ${gmefile.game2NbinariesTable[argv.b].filename} with dd`)
         child.execSync(`dd "if=binaries/${argv.n}/build/2N.bin" "of=${argv.o}" bs=1 seek=${gmefile.game2NbinariesTable[argv.b].offset} count=${gmefile.game2NbinariesTable[argv.b].size} conv=notrunc`)
         child.execSync(`dd "if=binaries/${argv.n}/build/3L.bin" "of=${argv.o}" bs=1 seek=${gmefile.game3LbinariesTable[argv.b].offset} count=${gmefile.game3LbinariesTable[argv.b].size} conv=notrunc`)

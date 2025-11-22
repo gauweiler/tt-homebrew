@@ -53,25 +53,42 @@ const hookBinary = (file, hook_bin) => {
 
 // gme wird auseinandergebaut, binary gelesen,
 const gmefile = new GmeFile(readFileSync(argv.i))
-
-const binary = gmefile.gmeFileBuffer.slice(gmefile.game3LbinariesTable[argv.b].offset, gmefile.game3LbinariesTable[argv.b].offset + gmefile.game3LbinariesTable[argv.b].size)
+// todo
+let binary3L;
+let binary2N;
+if (argv.b == "m") {
+    binary2N = gmefile.gmeFileBuffer.slice(gmefile.main2NbinaryTable[0].offset, gmefile.main2NbinaryTable[0].offset + gmefile.main2NbinaryTable[0].size)
+    binary3L = gmefile.gmeFileBuffer.slice(gmefile.main3LbinaryTable[0].offset, gmefile.main3LbinaryTable[0].offset + gmefile.main3LbinaryTable[0].size)
+} else {
+    binary2N = gmefile.gmeFileBuffer.slice(gmefile.game2NbinariesTable[argv.b].offset, gmefile.game2NbinariesTable[argv.b].offset + gmefile.game2NbinariesTable[argv.b].size)
+    binary3L = gmefile.gmeFileBuffer.slice(gmefile.game3LbinariesTable[argv.b].offset, gmefile.game3LbinariesTable[argv.b].offset + gmefile.game3LbinariesTable[argv.b].size)
+}
 
 // offsets in link script geschrieben,
-writeFileSync("lib/2N_hook.ld", readFileSync("lib/2N.ld").toString().replace("08132000", (0x08132000 + binary.length).toString(16)))
-writeFileSync("lib/3L_hook.ld", readFileSync("lib/3L.ld").toString().replace("00930000", (0x00930000 + binary.length).toString(16)))
+writeFileSync("lib/2N_hook.ld", readFileSync("lib/2N.ld").toString().replace("08132000", (0x08132000 + binary2N.length).toString(16)))
+writeFileSync("lib/3L_hook.ld", readFileSync("lib/3L.ld").toString().replace("00930000", (0x00930000 + binary3L.length).toString(16)))
 
 
 // make wird ausgeführt
 execSync("make", { cwd: `hooks/${argv.n}` }).toString()
 
 // binary wird an ende der orginal binary copiert, jump wird geändert
-const new_bin = hookBinary(binary, readFileSync(`hooks/${argv.n}/build/3L.bin`))
+const new_bin2N = hookBinary(binary2N, readFileSync(`hooks/${argv.n}/build/2N.bin`))
+const new_bin3L = hookBinary(binary3L, readFileSync(`hooks/${argv.n}/build/3L.bin`))
 
+writeFileSync("debug2Nhook.bin", new_bin2N)
 // (inject.js) binary wird per changeBinary() reingepackt, da größere größe IMP:
-gmefile.replaceBinary(new_bin, gmefile.game3LbinariesTable, gmefile.game3LbinariesTableOffset, argv.b)
+// todo
+if (argv.b == "m") {
+    gmefile.replaceBinary(new_bin2N, gmefile.main2NbinaryTable, gmefile.main2NbinaryTableOffset, 0)
+    gmefile.replaceBinary(new_bin3L, gmefile.main3LbinaryTable, gmefile.main3LbinaryTableOffset, 0)
+} else {
+    gmefile.replaceBinary(new_bin2N, gmefile.game2NbinariesTable, gmefile.game2NbinariesTableOffset, argv.b)
+    gmefile.replaceBinary(new_bin3L, gmefile.game3LbinariesTable, gmefile.game3LbinariesTableOffset, argv.b)
+}
 
 if (argv.s) {
-    gmefile.changeProductId(s)
+    gmefile.changeProductId(argv.s)
 }
 
 writeFileSync(argv.o ?? `hooked_${gmefile.productId}_${argv.i}`, gmefile.gmeFileBuffer)

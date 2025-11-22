@@ -31,7 +31,7 @@ void playSoundNow(unsigned int sound_id) {
     api->read(filehandle_current_gme, &soundOffset, 4);
     api->read(filehandle_current_gme, &soundLength, 4);
 
-    api->last_thing_that_gets_called_to_play_sound(filehandle_current_gme, soundOffset, soundLength);
+    api->play_sound(filehandle_current_gme, soundOffset, soundLength);
 }
 
 unsigned short getOid() {
