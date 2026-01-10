@@ -111,6 +111,11 @@ void uart_printf(char* str, ...) {
                 uart_putc(c);
                 break;
             }
+            case 's': {
+                char* s = va_arg(args, char*);
+                uart_puts(s);
+                break;
+            }
 
             default: {
                 uart_putc('%');
