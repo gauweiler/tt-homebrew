@@ -8,6 +8,13 @@
 
 #define UART_INTERFACE_EN (1 << 21)
 
+
+#define UART_CFG1 ((volatile unsigned int*)0x04036000)
+#define UART_CFG2 ((volatile unsigned int*)0x04036004)
+#define UART_DATA_CFG ((volatile unsigned int*)0x04036008)
+
+#define UART_RX_BUF ((volatile unsigned int*)0x08006ac0)
+
 volatile int* const pREG_SHARE_PIN_CTRL = (int*)0x04000074;
 volatile int* const pREG_UART_CFG1 = (int*)0x04036000;
 
@@ -25,6 +32,25 @@ void init_uart() {
 void uart_putc(char c) { bios_uart_putc(c); }
 
 void uart_puts(char* str) { bios_uart_puts(str); }
+
+unsigned char uart_getc(char *value) {
+    if ((*UART_DATA_CFG & (0x1F << 13)) == 0) {
+        return 0;
+    }
+
+    unsigned int raw_data = UART_RX_BUF[0];
+
+    unsigned int cfg1 = *UART_CFG1;
+    *UART_CFG1 = cfg1 | (1 << 30);
+
+    // todo check if needed
+    *UART_CFG1 = cfg1 & ~(1 << 30);
+
+    // uart_printf("data: %x, letter: %c\r\n", raw_data, raw_data & 0xFF);
+
+    *value = (unsigned char)(raw_data & 0xFF);
+    return 1;
+}
 
 void print_integer(int value, int base, int is_signed) {
     char buffer[33];
