@@ -1,0 +1,68 @@
+name: Build and Release Binaries
+
+on:
+  push:
+    branches: [ "main" ]
+    tags:
+      - 'v*'
+  pull_request:
+    branches: [ "main" ]
+
+permissions:
+  contents: write 
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install ARM GCC Toolchain
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gcc-arm-none-eabi build-essential zip
+
+      - name: Install NPM Dependencies
+        run: npm ci
+
+      - name: Build all binaries
+        run: |
+          mkdir -p dist
+          
+          for dir in binaries/*; do
+            if [ -d "$dir" ] && [ -f "$dir/Makefile" ]; then
+              echo "Building $dir..."
+              make -C "$dir"
+              
+              parent_dir=$(basename $(dirname "$dir"))
+              base_name=$(basename "$dir")
+              mkdir -p "dist/$parent_dir/$base_name"
+              
+              cp "$dir"/build/*.bin "dist/$parent_dir/$base_name/" 2>/dev/null || true
+            fi
+          done
+          
+          cd dist
+          zip -r ../tt-homebrew-binaries.zip .
+
+      - name: Upload Build Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: tt-homebrew-binaries
+          path: tt-homebrew-binaries.zip
+          retention-days: 14
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: tt-homebrew-binaries.zip
+          generate_release_notes: true
